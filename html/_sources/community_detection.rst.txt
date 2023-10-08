@@ -1,0 +1,7 @@
+community\_detection module
+===========================
+
+.. automodule:: community_detection
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,7 @@
+mainTwitter module
+==================
+
+.. automodule:: mainTwitter
+   :members:
+   :undoc-members:
+   :show-inheritance:

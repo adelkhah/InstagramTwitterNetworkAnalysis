@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<head>
+      <meta charset="utf-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Admin Dashboard | Korsat X Parmaga</title>
+    <!-- ======= Styles ====== -->
+    <link rel="stylesheet" href="/static/style.css">
+
+
+</head>
+
+
+
+<body>
+    <!-- =============== Navigation ================ -->
+    <div class="container">
+        <div class="navigation">
+            <ul>
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <ion-icon name="list-outline"></ion-icon>
+                        </span>
+                        <span class="title">Instagram Networks</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/">
+                        <span class="icon">
+                            <ion-icon name="home-outline"></ion-icon>
+                        </span>
+                        <span class="title">Home</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/Communities">
+                        <span class="icon">
+                            <ion-icon name="people-outline"></ion-icon>
+                        </span>
+                        <span class="title">Communities</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/influence">
+                        <span class="icon">
+                            <ion-icon name="trending-up-outline"></ion-icon>
+                        </span>
+                        <span class="title">Maximum Influence</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/tagshow">
+                        <span class="icon">
+                            <ion-icon name="git-compare-outline"></ion-icon>
+                        </span>
+                        <span class="title">Tags Graph</span>
+                    </a>
+                </li>
+                 <li>
+                    <a href="/tagshowcluster">
+                        <span class="icon">
+                            <ion-icon name="grid-outline"></ion-icon>
+                        </span>
+                        <span class="title">Tags Clustering</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/linkpredict">
+                        <span class="icon">
+                            <ion-icon name="git-commit-outline"></ion-icon>
+                        </span>
+                        <span class="title">Link Prediction</span>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+
+        <!-- ========================= Main ==================== -->
+        <div class="main">
+
+            <!-- ================ Order Details List ================= -->
+            <div class="details">
+                <div class="recentOrders">
+                    <div class="cardHeader">
+                        <h2>Users Similarity</h2>
+                        <a href="#" class="btn">View All</a>
+                    </div>
+
+                    <table id="myTable">
+                        <thead>
+                            <tr>
+                                <th onclick="sortTable(0)">User1</th>
+                                <th onclick="sortTable(1)">User2</th>
+                              <th onclick="sortTable(2)">Common Neighbors</th>
+                              <th onclick="sortTable(3)">Average Post Image Similarity</th>
+
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+
+                        {% for row in linkp['similarity'] %}
+                        <tr>
+                                <td>{{ row[0] }}</td>
+                                <td>{{ row[1] }}</td>
+                                <td>{{ row[2] }}</td>
+                                <td>{{ row[3] }}</td>
+
+                        </tr>
+
+                        {% endfor %}
+
+
+
+
+                        </tbody>
+
+
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- =========== Scripts =========  -->
+    <script src="/js/main.js"></script>
+
+    <!-- ====== ionicons ======= -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+
+<script>
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("myTable");
+  switching = true;
+  dir = "asc";
+  while (switching) {
+    switching = false;
+    rows = table.rows;
+    for (i = 1; i < (rows.length - 1); i++) {
+      shouldSwitch = false;
+      x = rows[i].getElementsByTagName("TD")[n];
+      y = rows[i + 1].getElementsByTagName("TD")[n];
+      if (dir == "asc") {
+        if (parseFloat(x.innerHTML) > parseFloat(y.innerHTML)) {
+          shouldSwitch = true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (parseFloat(x.innerHTML) < parseFloat(y.innerHTML)) {
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+    if (shouldSwitch) {
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      switchcount ++;
+    } else {
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+</script>

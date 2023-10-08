@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>relation_to_json &mdash; Social Media Analysis Twitter and Instagram 1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=404a92a0"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Social Media Analysis Twitter and Instagram
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">condainstagramanalys</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Social Media Analysis Twitter and Instagram</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">relation_to_json</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for relation_to_json</h1><div class="highlight"><pre>
+<span></span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<div class="viewcode-block" id="relations_to_json"><a class="viewcode-back" href="../relation_to_json.html#relation_to_json.relations_to_json">[docs]</a><span class="k">def</span> <span class="nf">relations_to_json</span><span class="p">(</span><span class="n">input_txt_file</span><span class="p">,</span> <span class="n">output_json_file</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts a text file describing relations between entities into a JSON file.</span>
+
+<span class="sd">    The input text file should contain lines where each line describes a relation between two entities.</span>
+<span class="sd">    Each line should contain two strings separated by a space, representing the two entities.</span>
+
+<span class="sd">    The output JSON file contains a list of nodes and a list of links.</span>
+<span class="sd">    Each node is represented as a dictionary with &quot;id&quot;, &quot;name&quot;, and &quot;group&quot; as keys.</span>
+<span class="sd">    Each link is represented as a dictionary with &quot;id&quot;, &quot;source&quot;, &quot;target&quot;, &quot;value&quot;, and &quot;bi_directional&quot; as keys.</span>
+<span class="sd">    The &#39;source&#39; and &#39;target&#39; in each link are ids of the two entities.</span>
+
+<span class="sd">    If a connection exists in both directions (entity A to entity B and entity B to entity A),</span>
+<span class="sd">    the &quot;bi_directional&quot; key in the corresponding link will be True. Otherwise, it will be False.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input_txt_file : str</span>
+<span class="sd">        The path to the input text file.</span>
+<span class="sd">    output_json_file : str</span>
+<span class="sd">        The path to the output JSON file.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple</span>
+<span class="sd">        A tuple containing a dictionary mapping each entity&#39;s name to its id and a set of all edges as tuples.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    IOError</span>
+<span class="sd">        If the input file could not be read or the output file could not be written.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">nodes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">edges</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">name_to_id</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">input_txt_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">eachline</span> <span class="o">=</span> <span class="n">line</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">accounts</span> <span class="o">=</span> <span class="n">eachline</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+            <span class="n">account_1</span> <span class="o">=</span> <span class="n">accounts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">account_2</span> <span class="o">=</span> <span class="n">accounts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="n">nodes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">account_1</span><span class="p">)</span>
+            <span class="n">nodes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">account_2</span><span class="p">)</span>
+            <span class="n">edges</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">account_1</span><span class="p">,</span> <span class="n">account_2</span><span class="p">))</span>
+
+
+    <span class="nb">dict</span><span class="p">[</span><span class="s2">&quot;nodes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+
+    <span class="n">id_n</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">account</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
+        <span class="nb">dict</span><span class="p">[</span><span class="s2">&quot;nodes&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">id_n</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">account</span><span class="p">,</span> <span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+        <span class="n">name_to_id</span><span class="p">[</span><span class="n">account</span><span class="p">]</span> <span class="o">=</span> <span class="n">id_n</span>
+        <span class="n">id_n</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="nb">dict</span><span class="p">[</span><span class="s2">&quot;links&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">bi_links</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">id_l</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">accounts</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span>
+        <span class="n">id_1</span> <span class="o">=</span> <span class="n">name_to_id</span><span class="p">[</span><span class="n">accounts</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="n">id_2</span> <span class="o">=</span> <span class="n">name_to_id</span><span class="p">[</span><span class="n">accounts</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">accounts</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">accounts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span>
+            <span class="n">bi_links</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">id_1</span><span class="p">,</span> <span class="n">id_2</span><span class="p">))</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">id_2</span><span class="p">,</span> <span class="n">id_1</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">bi_links</span><span class="p">:</span>
+                <span class="nb">dict</span><span class="p">[</span><span class="s2">&quot;links&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">id_l</span><span class="p">,</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">id_1</span><span class="p">,</span> <span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="n">id_2</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span> <span class="s2">&quot;bi_directional&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
+                <span class="n">id_l</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">dict</span><span class="p">[</span><span class="s2">&quot;links&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">id_l</span><span class="p">,</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">id_1</span><span class="p">,</span> <span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="n">id_2</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span> <span class="s2">&quot;bi_directional&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
+            <span class="n">id_l</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_json_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="n">outfile</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;json created&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">name_to_id</span><span class="p">,</span> <span class="n">edges</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="allrealation_toText_Instagram"><a class="viewcode-back" href="../relation_to_json.html#relation_to_json.allrealation_toText_Instagram">[docs]</a><span class="k">def</span> <span class="nf">allrealation_toText_Instagram</span><span class="p">(</span><span class="n">file_name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function reads the followers and followings of all instagram users from files,</span>
+<span class="sd">    creates a list of all relations, and writes them to a text file.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    file_name (str): The name of the output text file. Each line in the file will contain</span>
+<span class="sd">                     two usernames separated by a space, representing a relation between them.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    None: This function does not return anything but writes the relations to a text file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">instagramscraper</span> <span class="k">as</span> <span class="nn">isp</span>
+    <span class="n">alluser</span> <span class="o">=</span> <span class="n">isp</span><span class="o">.</span><span class="n">read_alluser_fromFile</span><span class="p">()</span>
+    <span class="n">rela</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">username</span> <span class="ow">in</span> <span class="n">alluser</span><span class="p">:</span>
+        <span class="n">lfollower</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">lfollowing</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">lfollower</span> <span class="o">=</span> <span class="n">isp</span><span class="o">.</span><span class="n">read_follower_fromFile</span><span class="p">(</span><span class="n">username</span><span class="p">)</span>
+            <span class="n">lfollowing</span> <span class="o">=</span> <span class="n">isp</span><span class="o">.</span><span class="n">read_following_fromFile</span><span class="p">(</span><span class="n">username</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lfollower</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">lfollowing</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">for</span> <span class="n">user1</span> <span class="ow">in</span> <span class="n">lfollower</span><span class="p">:</span>
+            <span class="n">rela</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">user1</span><span class="p">,</span> <span class="n">username</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">user2</span> <span class="ow">in</span> <span class="n">lfollowing</span><span class="p">:</span>
+            <span class="n">rela</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">username</span><span class="p">,</span> <span class="n">user2</span><span class="p">))</span>
+
+    <span class="c1"># Write list to file</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">u1</span><span class="p">,</span> <span class="n">u2</span><span class="p">)</span> <span class="ow">in</span> <span class="n">rela</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">u1</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">u2</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="allrealation_toText_Twitter"><a class="viewcode-back" href="../relation_to_json.html#relation_to_json.allrealation_toText_Twitter">[docs]</a><span class="k">def</span> <span class="nf">allrealation_toText_Twitter</span><span class="p">(</span><span class="n">file_name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function reads the followers and followings of all twitter users from files,</span>
+<span class="sd">    creates a list of all relations, and writes them to a text file.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    file_name (str): The name of the output text file. Each line in the file will contain</span>
+<span class="sd">                     two usernames separated by a space, representing a relation between them.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    None: This function does not return anything but writes the relations to a text file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">twitterscrape</span> <span class="k">as</span> <span class="nn">ts</span>
+    <span class="n">alluser</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">read_alluser_fromFile</span><span class="p">()</span>
+    <span class="n">rela</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">username</span> <span class="ow">in</span> <span class="n">alluser</span><span class="p">:</span>
+        <span class="n">lfollower</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">lfollowing</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">lfollower</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">read_follower_fromFile</span><span class="p">(</span><span class="n">username</span><span class="p">)</span>
+            <span class="n">lfollowing</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">read_following_fromFile</span><span class="p">(</span><span class="n">username</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lfollower</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">lfollowing</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">for</span> <span class="n">user1</span> <span class="ow">in</span> <span class="n">lfollower</span><span class="p">:</span>
+            <span class="n">rela</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">user1</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">username</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">user2</span> <span class="ow">in</span> <span class="n">lfollowing</span><span class="p">:</span>
+            <span class="n">rela</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">username</span><span class="p">,</span> <span class="n">user2</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span>
+
+    <span class="c1"># Write list to file</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">u1</span><span class="p">,</span> <span class="n">u2</span><span class="p">)</span> <span class="ow">in</span> <span class="n">rela</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">u1</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">u2</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+
+
+
+<span class="kn">import</span> <span class="nn">community_detection</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+
+    <span class="n">instagram_edges_text</span> <span class="o">=</span> <span class="s1">&#39;InstagramRelationship.txt&#39;</span>
+    <span class="n">twitter_edges_text</span> <span class="o">=</span> <span class="s1">&#39;TwitterRelationship.txt&#39;</span>
+
+    <span class="n">instagram_json_graph</span> <span class="o">=</span> <span class="s1">&#39;02 visual/instagram.json&#39;</span>
+    <span class="n">twitter_json_graph</span> <span class="o">=</span> <span class="s1">&#39;02 visual/Twitter.json&#39;</span>
+
+    <span class="n">instagram_communities_json</span> <span class="o">=</span> <span class="s1">&#39;02 visual/instagram_louvain.json&#39;</span>
+    <span class="n">twitter_communities_json</span> <span class="o">=</span> <span class="s1">&#39;02 visual/twitter_louvain.json&#39;</span>
+
+    <span class="n">allrealation_toText_Instagram</span><span class="p">(</span><span class="n">instagram_edges_text</span><span class="p">)</span>
+    <span class="n">relations_to_json</span><span class="p">(</span><span class="n">instagram_edges_text</span><span class="p">,</span> <span class="n">instagram_json_graph</span><span class="p">)</span>
+
+    <span class="n">allrealation_toText_Twitter</span><span class="p">(</span><span class="n">twitter_edges_text</span><span class="p">)</span>
+    <span class="n">relations_to_json</span><span class="p">(</span><span class="n">twitter_edges_text</span><span class="p">,</span> <span class="n">twitter_json_graph</span><span class="p">)</span>
+
+    <span class="n">community_detection</span><span class="o">.</span><span class="n">community_detection</span><span class="p">(</span><span class="n">instagram_edges_text</span><span class="p">,</span>
+                                            <span class="n">instagram_json_graph</span><span class="p">,</span>
+                                            <span class="n">instagram_communities_json</span><span class="p">)</span>
+
+    <span class="n">community_detection</span><span class="o">.</span><span class="n">community_detection</span><span class="p">(</span><span class="n">twitter_edges_text</span><span class="p">,</span>
+                                            <span class="n">twitter_json_graph</span><span class="p">,</span>
+                                            <span class="n">twitter_communities_json</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Ali Adelkhah.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

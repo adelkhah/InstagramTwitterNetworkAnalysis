@@ -1,0 +1,7 @@
+greedy\_celf module
+===================
+
+.. automodule:: greedy_celf
+   :members:
+   :undoc-members:
+   :show-inheritance:

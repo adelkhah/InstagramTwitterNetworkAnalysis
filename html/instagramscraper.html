@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>instagramscraper module &mdash; Social Media Analysis Twitter and Instagram 1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=404a92a0"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="mainInstagram module" href="mainInstagram.html" />
+    <link rel="prev" title="helper_functions module" href="helper_functions.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Social Media Analysis Twitter and Instagram
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">condainstagramanalys</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Betweenness_pageRank_Degree.html">Betweenness_pageRank_Degree module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="community_detection.html">community_detection module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="greedy_celf.html">greedy_celf module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="helper_functions.html">helper_functions module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">instagramscraper module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#instagramscraper.clean_text"><code class="docutils literal notranslate"><span class="pre">clean_text()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#instagramscraper.count_jpg_files"><code class="docutils literal notranslate"><span class="pre">count_jpg_files()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#instagramscraper.download_images"><code class="docutils literal notranslate"><span class="pre">download_images()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#instagramscraper.find_profile_detail"><code class="docutils literal notranslate"><span class="pre">find_profile_detail()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#instagramscraper.read_alluser_fromFile"><code class="docutils literal notranslate"><span class="pre">read_alluser_fromFile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#instagramscraper.read_comments"><code class="docutils literal notranslate"><span class="pre">read_comments()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#instagramscraper.read_follower_fromFile"><code class="docutils literal notranslate"><span class="pre">read_follower_fromFile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#instagramscraper.read_following_fromFile"><code class="docutils literal notranslate"><span class="pre">read_following_fromFile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#instagramscraper.read_profile"><code class="docutils literal notranslate"><span class="pre">read_profile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#instagramscraper.read_tags"><code class="docutils literal notranslate"><span class="pre">read_tags()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#instagramscraper.remove_html_tags_word"><code class="docutils literal notranslate"><span class="pre">remove_html_tags_word()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#instagramscraper.scrape_followers"><code class="docutils literal notranslate"><span class="pre">scrape_followers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#instagramscraper.scrape_followings"><code class="docutils literal notranslate"><span class="pre">scrape_followings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#instagramscraper.scrape_instagram"><code class="docutils literal notranslate"><span class="pre">scrape_instagram()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#instagramscraper.scrape_tags"><code class="docutils literal notranslate"><span class="pre">scrape_tags()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#instagramscraper.write_alluser_toFile"><code class="docutils literal notranslate"><span class="pre">write_alluser_toFile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#instagramscraper.write_comments"><code class="docutils literal notranslate"><span class="pre">write_comments()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#instagramscraper.write_follower_toFile"><code class="docutils literal notranslate"><span class="pre">write_follower_toFile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#instagramscraper.write_following_toFile"><code class="docutils literal notranslate"><span class="pre">write_following_toFile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#instagramscraper.write_tag"><code class="docutils literal notranslate"><span class="pre">write_tag()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="mainInstagram.html">mainInstagram module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mainTwitter.html">mainTwitter module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="relation_to_json.html">relation_to_json module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="similarity.html">similarity module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tagAnalysis.html">tagAnalysis module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="taggraph.html">taggraph module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="twitterscrape.html">twitterscrape module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Social Media Analysis Twitter and Instagram</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">condainstagramanalys</a></li>
+      <li class="breadcrumb-item active">instagramscraper module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/instagramscraper.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-instagramscraper">
+<span id="instagramscraper-module"></span><h1>instagramscraper module<a class="headerlink" href="#module-instagramscraper" title="Permalink to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="instagramscraper.clean_text">
+<span class="sig-prename descclassname"><span class="pre">instagramscraper.</span></span><span class="sig-name descname"><span class="pre">clean_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/instagramscraper.html#clean_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#instagramscraper.clean_text" title="Permalink to this definition"></a></dt>
+<dd><p>This function cleans a list of text strings by removing all non-alphanumeric characters, converting to lowercase, and removing extra whitespace.</p>
+<p>Parameters:
+text_list (list): A list of text strings to be cleaned.</p>
+<p>Returns:
+list: A list of cleaned text strings.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="instagramscraper.count_jpg_files">
+<span class="sig-prename descclassname"><span class="pre">instagramscraper.</span></span><span class="sig-name descname"><span class="pre">count_jpg_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/instagramscraper.html#count_jpg_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#instagramscraper.count_jpg_files" title="Permalink to this definition"></a></dt>
+<dd><p>This function counts the number of ‘.jpg’ files in a specific directory.</p>
+<p>Parameters:
+name (str): The name of the profile. The function will look in a directory named after the profile under ‘instagramuser/images’.</p>
+<p>Returns:
+int: The count of ‘.jpg’ files in the specified directory.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="instagramscraper.download_images">
+<span class="sig-prename descclassname"><span class="pre">instagramscraper.</span></span><span class="sig-name descname"><span class="pre">download_images</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">driver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imagenumber</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/instagramscraper.html#download_images"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#instagramscraper.download_images" title="Permalink to this definition"></a></dt>
+<dd><p>This function downloads a specified number of images for a specific Instagram user.</p>
+<p>Parameters:
+driver: The webdriver instance to interact with the web page.
+name (str): The name of the Instagram user. The function will look for images in a directory named after the profile under ‘instagramuser/images’.
+imagenumber (int): The number of images to download.</p>
+<p>Note:
+The function will create a directory ‘instagramuser/{name}/images’ if it does not exist and download the images into this directory. Each image is saved as ‘image-{number}.jpg’, where {number} is the order of the image.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="instagramscraper.find_profile_detail">
+<span class="sig-prename descclassname"><span class="pre">instagramscraper.</span></span><span class="sig-name descname"><span class="pre">find_profile_detail</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">driver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/instagramscraper.html#find_profile_detail"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#instagramscraper.find_profile_detail" title="Permalink to this definition"></a></dt>
+<dd><p>This function finds the profile details of a specific Instagram user and saves them to a text file. It also downloads the profile image.</p>
+<p>Parameters:
+driver: The webdriver instance to interact with the web page.
+name (str): The name of the Instagram user. The function will look for profile details in a directory named after the profile under ‘instagramuser’.</p>
+<p>Returns:
+list: A list of profile details read from the web page.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="instagramscraper.read_alluser_fromFile">
+<span class="sig-prename descclassname"><span class="pre">instagramscraper.</span></span><span class="sig-name descname"><span class="pre">read_alluser_fromFile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/instagramscraper.html#read_alluser_fromFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#instagramscraper.read_alluser_fromFile" title="Permalink to this definition"></a></dt>
+<dd><p>This function reads a list of all Instagram users from a text file.</p>
+<p>Returns:
+list: A list of Instagram user names read from the file. Each user name is a line from the file with the trailing linebreak removed.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="instagramscraper.read_comments">
+<span class="sig-prename descclassname"><span class="pre">instagramscraper.</span></span><span class="sig-name descname"><span class="pre">read_comments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/instagramscraper.html#read_comments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#instagramscraper.read_comments" title="Permalink to this definition"></a></dt>
+<dd><p>This function reads the comments of a given Instagram user’s posts from a file.</p>
+<p>Parameters:
+name (str): The username of the Instagram account.</p>
+<p>Returns:
+list: A list of comments from the user’s posts.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="instagramscraper.read_follower_fromFile">
+<span class="sig-prename descclassname"><span class="pre">instagramscraper.</span></span><span class="sig-name descname"><span class="pre">read_follower_fromFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/instagramscraper.html#read_follower_fromFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#instagramscraper.read_follower_fromFile" title="Permalink to this definition"></a></dt>
+<dd><p>This function reads a list of followers from a text file for a specific Instagram user.</p>
+<p>Parameters:
+name (str): The name of the Instagram user. The function will look for a file named ‘follower.txt’ in a directory named after the profile under ‘instagramuser’.</p>
+<p>Returns:
+list: A list of follower names read from the file. Each follower name is a line from the file with the trailing linebreak removed.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="instagramscraper.read_following_fromFile">
+<span class="sig-prename descclassname"><span class="pre">instagramscraper.</span></span><span class="sig-name descname"><span class="pre">read_following_fromFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/instagramscraper.html#read_following_fromFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#instagramscraper.read_following_fromFile" title="Permalink to this definition"></a></dt>
+<dd><p>This function reads a list of followings from a text file for a specific Instagram user.</p>
+<p>Parameters:
+name (str): The name of the Instagram user. The function will look for a file named ‘following.txt’ in a directory named after the profile under ‘instagramuser’.</p>
+<p>Returns:
+list: A list of following names read from the file. Each following name is a line from the file with the trailing linebreak removed.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="instagramscraper.read_profile">
+<span class="sig-prename descclassname"><span class="pre">instagramscraper.</span></span><span class="sig-name descname"><span class="pre">read_profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/instagramscraper.html#read_profile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#instagramscraper.read_profile" title="Permalink to this definition"></a></dt>
+<dd><p>This function reads a profile from a text file and returns a list of names.</p>
+<p>Parameters:
+name (str): The name of the profile. The function will look for a file named ‘profile.txt’ in a directory named after the profile under ‘instagramuser’.</p>
+<p>Returns:
+list: A list of names read from the file. Each name is a line from the file with the trailing linebreak removed.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="instagramscraper.read_tags">
+<span class="sig-prename descclassname"><span class="pre">instagramscraper.</span></span><span class="sig-name descname"><span class="pre">read_tags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/instagramscraper.html#read_tags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#instagramscraper.read_tags" title="Permalink to this definition"></a></dt>
+<dd><p>This function reads the tags of a given Instagram user from a file.</p>
+<p>Parameters:
+name (str): The username of the Instagram account.</p>
+<p>Returns:
+list: A list of tags from the user’s posts.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="instagramscraper.remove_html_tags_word">
+<span class="sig-prename descclassname"><span class="pre">instagramscraper.</span></span><span class="sig-name descname"><span class="pre">remove_html_tags_word</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/instagramscraper.html#remove_html_tags_word"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#instagramscraper.remove_html_tags_word" title="Permalink to this definition"></a></dt>
+<dd><p>This function removes all HTML tags from a text string.</p>
+<p>Parameters:
+text (str): The text string from which to remove HTML tags.</p>
+<p>Returns:
+str: The text string without any HTML tags.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="instagramscraper.scrape_followers">
+<span class="sig-prename descclassname"><span class="pre">instagramscraper.</span></span><span class="sig-name descname"><span class="pre">scrape_followers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">driver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_input</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/instagramscraper.html#scrape_followers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#instagramscraper.scrape_followers" title="Permalink to this definition"></a></dt>
+<dd><p>This function scrapes the followers of a given Instagram user.</p>
+<p>Parameters:
+driver (webdriver): The webdriver instance to interact with the web page.
+username (str): The username of the Instagram account to scrape followers from.
+user_input (int): The number of followers to scrape.</p>
+<p>Returns:
+list: A list of usernames of the followers.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="instagramscraper.scrape_followings">
+<span class="sig-prename descclassname"><span class="pre">instagramscraper.</span></span><span class="sig-name descname"><span class="pre">scrape_followings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">driver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_input</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/instagramscraper.html#scrape_followings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#instagramscraper.scrape_followings" title="Permalink to this definition"></a></dt>
+<dd><p>This function scrapes the followings of a given Instagram user.</p>
+<p>Parameters:
+driver (webdriver): The webdriver instance to interact with the web page.
+username (str): The username of the Instagram account to scrape followings from.
+user_input (int): The number of followings to scrape.</p>
+<p>Returns:
+list: A list of usernames of the followings.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="instagramscraper.scrape_instagram">
+<span class="sig-prename descclassname"><span class="pre">instagramscraper.</span></span><span class="sig-name descname"><span class="pre">scrape_instagram</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">driver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imageinput</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ferinput</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finginput</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/instagramscraper.html#scrape_instagram"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#instagramscraper.scrape_instagram" title="Permalink to this definition"></a></dt>
+<dd><p>This function scrapes an Instagram profile and downloads images from the profile.
+It also scrapes the followers and followings of the profile.</p>
+<p>Parameters:
+driver (webdriver object): The webdriver object to interact with the Instagram page.
+username (str): The username of the Instagram profile to scrape.
+imageinput (int): The number of images to download from the profile.
+ferinput (int): The number of followers to scrape from the profile.
+finginput (int): The number of followings to scrape from the profile.</p>
+<p>Returns:
+None: This function does not return anything but writes the scraped data to files.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="instagramscraper.scrape_tags">
+<span class="sig-prename descclassname"><span class="pre">instagramscraper.</span></span><span class="sig-name descname"><span class="pre">scrape_tags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">driver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/instagramscraper.html#scrape_tags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#instagramscraper.scrape_tags" title="Permalink to this definition"></a></dt>
+<dd><p>This function scrapes the tags and comments of a given Instagram user’s posts.</p>
+<p>Parameters:
+driver (webdriver): The webdriver instance to interact with the web page.
+username (str): The username of the Instagram account to scrape tags and comments from.</p>
+<p>Returns:
+tuple: A tuple containing two lists -</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>A list of tags from the user’s posts.</p></li>
+<li><p>A list of comments from the user’s posts.</p></li>
+</ol>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="instagramscraper.write_alluser_toFile">
+<span class="sig-prename descclassname"><span class="pre">instagramscraper.</span></span><span class="sig-name descname"><span class="pre">write_alluser_toFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/instagramscraper.html#write_alluser_toFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#instagramscraper.write_alluser_toFile" title="Permalink to this definition"></a></dt>
+<dd><p>This function writes a list of Instagram users to a text file.</p>
+<p>Parameters:
+lst (list): A list of Instagram user names.</p>
+<p>Note:
+The function will create a directory ‘instagramuser’ if it does not exist and write the user names to a file named ‘ALLinstagramUSERS.txt’ in this directory. Each user name is written on a new line.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="instagramscraper.write_comments">
+<span class="sig-prename descclassname"><span class="pre">instagramscraper.</span></span><span class="sig-name descname"><span class="pre">write_comments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/instagramscraper.html#write_comments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#instagramscraper.write_comments" title="Permalink to this definition"></a></dt>
+<dd><p>This function writes the comments of a given Instagram user’s posts to a file.</p>
+<p>Parameters:
+lst (list): A list of comments.
+name (str): The username of the Instagram account.</p>
+<p>Returns:
+None</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="instagramscraper.write_follower_toFile">
+<span class="sig-prename descclassname"><span class="pre">instagramscraper.</span></span><span class="sig-name descname"><span class="pre">write_follower_toFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/instagramscraper.html#write_follower_toFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#instagramscraper.write_follower_toFile" title="Permalink to this definition"></a></dt>
+<dd><p>This function writes a list of followers to a text file for a specific Instagram user.</p>
+<p>Parameters:
+lst (list): A list of follower names.
+name (str): The name of the Instagram user.</p>
+<p>Note:
+The function will create a directory ‘instagramuser/{name}’ if it does not exist and write the follower names to a file named ‘follower.txt’ in this directory. Each follower name is written on a new line.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="instagramscraper.write_following_toFile">
+<span class="sig-prename descclassname"><span class="pre">instagramscraper.</span></span><span class="sig-name descname"><span class="pre">write_following_toFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/instagramscraper.html#write_following_toFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#instagramscraper.write_following_toFile" title="Permalink to this definition"></a></dt>
+<dd><p>This function writes a list of followings to a text file for a specific Instagram user.</p>
+<p>Parameters:
+lst (list): A list of following names.
+name (str): The name of the Instagram user.</p>
+<p>Note:
+The function will create a directory ‘instagramuser/{name}’ if it does not exist and write the following names to a file named ‘following.txt’ in this directory. Each following name is written on a new line.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="instagramscraper.write_tag">
+<span class="sig-prename descclassname"><span class="pre">instagramscraper.</span></span><span class="sig-name descname"><span class="pre">write_tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/instagramscraper.html#write_tag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#instagramscraper.write_tag" title="Permalink to this definition"></a></dt>
+<dd><p>This function writes the tags of a given Instagram user’s posts to a file.</p>
+<p>Parameters:
+lst (list): A list of tags.
+name (str): The username of the Instagram account.</p>
+<p>Returns:
+None</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="helper_functions.html" class="btn btn-neutral float-left" title="helper_functions module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="mainInstagram.html" class="btn btn-neutral float-right" title="mainInstagram module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Ali Adelkhah.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

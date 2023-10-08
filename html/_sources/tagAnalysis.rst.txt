@@ -1,0 +1,7 @@
+tagAnalysis module
+==================
+
+.. automodule:: tagAnalysis
+   :members:
+   :undoc-members:
+   :show-inheritance:

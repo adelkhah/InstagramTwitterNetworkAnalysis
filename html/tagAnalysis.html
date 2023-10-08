@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tagAnalysis module &mdash; Social Media Analysis Twitter and Instagram 1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=404a92a0"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="taggraph module" href="taggraph.html" />
+    <link rel="prev" title="similarity module" href="similarity.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Social Media Analysis Twitter and Instagram
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">condainstagramanalys</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Betweenness_pageRank_Degree.html">Betweenness_pageRank_Degree module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="community_detection.html">community_detection module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="greedy_celf.html">greedy_celf module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="helper_functions.html">helper_functions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instagramscraper.html">instagramscraper module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mainInstagram.html">mainInstagram module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mainTwitter.html">mainTwitter module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="relation_to_json.html">relation_to_json module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="similarity.html">similarity module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">tagAnalysis module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tagAnalysis.find_trend"><code class="docutils literal notranslate"><span class="pre">find_trend()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tagAnalysis.most_frequent_two_word_phrases"><code class="docutils literal notranslate"><span class="pre">most_frequent_two_word_phrases()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tagAnalysis.most_frequent_words"><code class="docutils literal notranslate"><span class="pre">most_frequent_words()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tagAnalysis.read_tags_insta"><code class="docutils literal notranslate"><span class="pre">read_tags_insta()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tagAnalysis.remove_short_words"><code class="docutils literal notranslate"><span class="pre">remove_short_words()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tagAnalysis.sentiment_analys"><code class="docutils literal notranslate"><span class="pre">sentiment_analys()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tagAnalysis.sentiment_analys_english"><code class="docutils literal notranslate"><span class="pre">sentiment_analys_english()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tagAnalysis.sentiment_analys_farsi"><code class="docutils literal notranslate"><span class="pre">sentiment_analys_farsi()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tagAnalysis.top_n_keys"><code class="docutils literal notranslate"><span class="pre">top_n_keys()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tagAnalysis.trend_tag_sentiment"><code class="docutils literal notranslate"><span class="pre">trend_tag_sentiment()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="taggraph.html">taggraph module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="twitterscrape.html">twitterscrape module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Social Media Analysis Twitter and Instagram</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">condainstagramanalys</a></li>
+      <li class="breadcrumb-item active">tagAnalysis module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/tagAnalysis.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-tagAnalysis">
+<span id="taganalysis-module"></span><h1>tagAnalysis module<a class="headerlink" href="#module-tagAnalysis" title="Permalink to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="tagAnalysis.find_trend">
+<span class="sig-prename descclassname"><span class="pre">tagAnalysis.</span></span><span class="sig-name descname"><span class="pre">find_trend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tagnumber</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wordnumber</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tagAnalysis.html#find_trend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tagAnalysis.find_trend" title="Permalink to this definition"></a></dt>
+<dd><p>This function finds the trending hashtags and their associated words and phrases.</p>
+<p>Parameters:
+tagnumber (int): The number of top trending hashtags to find. Default is 10.
+wordnumber (int): The number of top words and phrases to find for each hashtag. Default is 5.</p>
+<p>Returns:
+tuple: A tuple containing three dictionaries -</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>A dictionary where the keys are hashtags and the values are their counts.</p></li>
+<li><p>A dictionary where the keys are hashtags and the values are lists of top words associated with each hashtag.</p></li>
+<li><p>A dictionary where the keys are hashtags and the values are lists of top two-word phrases associated with each hashtag.</p></li>
+</ol>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tagAnalysis.most_frequent_two_word_phrases">
+<span class="sig-prename descclassname"><span class="pre">tagAnalysis.</span></span><span class="sig-name descname"><span class="pre">most_frequent_two_word_phrases</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">texts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tagAnalysis.html#most_frequent_two_word_phrases"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tagAnalysis.most_frequent_two_word_phrases" title="Permalink to this definition"></a></dt>
+<dd><p>This function finds the most frequent two-word phrases in a list of texts.</p>
+<p>Parameters:
+texts (list): A list of text strings to analyze.</p>
+<p>Returns:
+dict: A dictionary where the keys are hashtags and the values are lists of tuples. Each tuple contains a two-word phrase and its frequency.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tagAnalysis.most_frequent_words">
+<span class="sig-prename descclassname"><span class="pre">tagAnalysis.</span></span><span class="sig-name descname"><span class="pre">most_frequent_words</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">texts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tagAnalysis.html#most_frequent_words"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tagAnalysis.most_frequent_words" title="Permalink to this definition"></a></dt>
+<dd><p>This function finds the most frequent words in a list of texts.</p>
+<p>Parameters:
+texts (list): A list of text strings to analyze.</p>
+<p>Returns:
+dict: A dictionary where the keys are hashtags and the values are lists of tuples. Each tuple contains a word and its frequency.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tagAnalysis.read_tags_insta">
+<span class="sig-prename descclassname"><span class="pre">tagAnalysis.</span></span><span class="sig-name descname"><span class="pre">read_tags_insta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tagAnalysis.html#read_tags_insta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tagAnalysis.read_tags_insta" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tagAnalysis.remove_short_words">
+<span class="sig-prename descclassname"><span class="pre">tagAnalysis.</span></span><span class="sig-name descname"><span class="pre">remove_short_words</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tagAnalysis.html#remove_short_words"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tagAnalysis.remove_short_words" title="Permalink to this definition"></a></dt>
+<dd><p>This function removes words from a string that are shorter than a specified length.</p>
+<p>Parameters:
+s (str): The string from which to remove short words.
+min_length (int): The minimum length of words to keep. Default is 4.</p>
+<p>Returns:
+str: The string with short words removed.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tagAnalysis.sentiment_analys">
+<span class="sig-prename descclassname"><span class="pre">tagAnalysis.</span></span><span class="sig-name descname"><span class="pre">sentiment_analys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tagAnalysis.html#sentiment_analys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tagAnalysis.sentiment_analys" title="Permalink to this definition"></a></dt>
+<dd><p>This function performs sentiment analysis on a given text. It detects the language of the text and calls the appropriate sentiment analysis function based on the language.</p>
+<p>Parameters:
+text (str): The text to perform sentiment analysis on.</p>
+<p>Returns:
+str: The sentiment of the text. It can be ‘joy’, ‘sad’, ‘hate’, ‘love’, ‘angry’, ‘fear’, or ‘none’ if the language is not supported.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tagAnalysis.sentiment_analys_english">
+<span class="sig-prename descclassname"><span class="pre">tagAnalysis.</span></span><span class="sig-name descname"><span class="pre">sentiment_analys_english</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tagAnalysis.html#sentiment_analys_english"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tagAnalysis.sentiment_analys_english" title="Permalink to this definition"></a></dt>
+<dd><p>This function performs sentiment analysis on a given English text.</p>
+<p>Parameters:
+text (str): The English text to perform sentiment analysis on.</p>
+<p>Returns:
+str: The sentiment of the text. It can be ‘joy’, ‘sad’, ‘hate’, ‘love’, ‘angry’, or ‘fear’.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tagAnalysis.sentiment_analys_farsi">
+<span class="sig-prename descclassname"><span class="pre">tagAnalysis.</span></span><span class="sig-name descname"><span class="pre">sentiment_analys_farsi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tagAnalysis.html#sentiment_analys_farsi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tagAnalysis.sentiment_analys_farsi" title="Permalink to this definition"></a></dt>
+<dd><p>This function performs sentiment analysis on a given Farsi text.</p>
+<p>Parameters:
+text (str): The Farsi text to perform sentiment analysis on.</p>
+<p>Returns:
+str: The sentiment of the text. It can be ‘joy’, ‘sad’, ‘hate’, ‘love’, ‘angry’, or ‘fear’.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tagAnalysis.top_n_keys">
+<span class="sig-prename descclassname"><span class="pre">tagAnalysis.</span></span><span class="sig-name descname"><span class="pre">top_n_keys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tagAnalysis.html#top_n_keys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tagAnalysis.top_n_keys" title="Permalink to this definition"></a></dt>
+<dd><p>This function finds the top N keys in a dictionary based on their values.</p>
+<p>Parameters:
+d (dict): The dictionary to analyze.
+n (int): The number of keys to return.</p>
+<p>Returns:
+list: A list of the top N keys in the dictionary.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tagAnalysis.trend_tag_sentiment">
+<span class="sig-prename descclassname"><span class="pre">tagAnalysis.</span></span><span class="sig-name descname"><span class="pre">trend_tag_sentiment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tagnumber</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tagAnalysis.html#trend_tag_sentiment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tagAnalysis.trend_tag_sentiment" title="Permalink to this definition"></a></dt>
+<dd><p>This function finds the sentiment of the tweets associated with the trending hashtags.</p>
+<p>Parameters:
+tagnumber (int): The number of top trending hashtags to analyze. Default is 10.</p>
+<p>Returns:
+dict: A dictionary where the keys are hashtags and the values are dictionaries. Each inner dictionary contains the sentiment counts for the associated hashtag.</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="similarity.html" class="btn btn-neutral float-left" title="similarity module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="taggraph.html" class="btn btn-neutral float-right" title="taggraph module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Ali Adelkhah.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>similarity module &mdash; Social Media Analysis Twitter and Instagram 1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=404a92a0"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="tagAnalysis module" href="tagAnalysis.html" />
+    <link rel="prev" title="relation_to_json module" href="relation_to_json.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Social Media Analysis Twitter and Instagram
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">condainstagramanalys</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Betweenness_pageRank_Degree.html">Betweenness_pageRank_Degree module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="community_detection.html">community_detection module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="greedy_celf.html">greedy_celf module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="helper_functions.html">helper_functions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instagramscraper.html">instagramscraper module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mainInstagram.html">mainInstagram module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mainTwitter.html">mainTwitter module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="relation_to_json.html">relation_to_json module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">similarity module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#similarity.common_instaneighbor_two_user"><code class="docutils literal notranslate"><span class="pre">common_instaneighbor_two_user()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#similarity.common_twitterneighbor_two_user"><code class="docutils literal notranslate"><span class="pre">common_twitterneighbor_two_user()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#similarity.cos_similarity"><code class="docutils literal notranslate"><span class="pre">cos_similarity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#similarity.count_jpg_files"><code class="docutils literal notranslate"><span class="pre">count_jpg_files()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#similarity.english_text_similarity"><code class="docutils literal notranslate"><span class="pre">english_text_similarity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#similarity.find_most_similar_instagram_users"><code class="docutils literal notranslate"><span class="pre">find_most_similar_instagram_users()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#similarity.find_most_similar_twitter_users"><code class="docutils literal notranslate"><span class="pre">find_most_similar_twitter_users()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#similarity.image_similarity_two_user"><code class="docutils literal notranslate"><span class="pre">image_similarity_two_user()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#similarity.post_similarity"><code class="docutils literal notranslate"><span class="pre">post_similarity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#similarity.read_comments"><code class="docutils literal notranslate"><span class="pre">read_comments()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#similarity.text_similarity"><code class="docutils literal notranslate"><span class="pre">text_similarity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#similarity.tweet_similarity"><code class="docutils literal notranslate"><span class="pre">tweet_similarity()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tagAnalysis.html">tagAnalysis module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="taggraph.html">taggraph module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="twitterscrape.html">twitterscrape module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Social Media Analysis Twitter and Instagram</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">condainstagramanalys</a></li>
+      <li class="breadcrumb-item active">similarity module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/similarity.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-similarity">
+<span id="similarity-module"></span><h1>similarity module<a class="headerlink" href="#module-similarity" title="Permalink to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="similarity.common_instaneighbor_two_user">
+<span class="sig-prename descclassname"><span class="pre">similarity.</span></span><span class="sig-name descname"><span class="pre">common_instaneighbor_two_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/similarity.html#common_instaneighbor_two_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#similarity.common_instaneighbor_two_user" title="Permalink to this definition"></a></dt>
+<dd><p>This function finds the common Instagram followers between two users.</p>
+<p>Parameters:
+u1 (str): The username of the first user.
+u2 (str): The username of the second user.</p>
+<p>Returns:
+int: The number of common followers between the two users.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="similarity.common_twitterneighbor_two_user">
+<span class="sig-prename descclassname"><span class="pre">similarity.</span></span><span class="sig-name descname"><span class="pre">common_twitterneighbor_two_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/similarity.html#common_twitterneighbor_two_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#similarity.common_twitterneighbor_two_user" title="Permalink to this definition"></a></dt>
+<dd><p>This function finds the common Twitter followers between two users.</p>
+<p>Parameters:
+u1 (str): The username of the first user.
+u2 (str): The username of the second user.</p>
+<p>Returns:
+int: The number of common followers between the two users.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="similarity.cos_similarity">
+<span class="sig-prename descclassname"><span class="pre">similarity.</span></span><span class="sig-name descname"><span class="pre">cos_similarity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/similarity.html#cos_similarity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#similarity.cos_similarity" title="Permalink to this definition"></a></dt>
+<dd><p>This function calculates the cosine similarity between two vectors.</p>
+<p>Parameters:
+a (np.array): The first vector.
+b (np.array): The second vector.</p>
+<p>Returns:
+float: The cosine similarity between the two vectors.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="similarity.count_jpg_files">
+<span class="sig-prename descclassname"><span class="pre">similarity.</span></span><span class="sig-name descname"><span class="pre">count_jpg_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/similarity.html#count_jpg_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#similarity.count_jpg_files" title="Permalink to this definition"></a></dt>
+<dd><p>This function counts the number of .jpg files in a specific directory.</p>
+<p>Parameters:
+name (str): The name of the directory to search in.</p>
+<p>Returns:
+int: The number of .jpg files in the directory.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="similarity.english_text_similarity">
+<span class="sig-prename descclassname"><span class="pre">similarity.</span></span><span class="sig-name descname"><span class="pre">english_text_similarity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/similarity.html#english_text_similarity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#similarity.english_text_similarity" title="Permalink to this definition"></a></dt>
+<dd><p>This function calculates the text similarity between two English texts.</p>
+<p>Parameters:
+text1 (str): The first text.
+text2 (str): The second text.</p>
+<p>Returns:
+float: The text similarity between the two texts.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="similarity.find_most_similar_instagram_users">
+<span class="sig-prename descclassname"><span class="pre">similarity.</span></span><span class="sig-name descname"><span class="pre">find_most_similar_instagram_users</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">numberOfuser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minimumNeighbor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/similarity.html#find_most_similar_instagram_users"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#similarity.find_most_similar_instagram_users" title="Permalink to this definition"></a></dt>
+<dd><p>This function finds the most similar Instagram users based on their followers.</p>
+<p>Parameters:
+numberOfuser (int): The number of users to find.
+minimumNeighbor (int): The minimum number of common followers between two users to consider them similar.</p>
+<p>Returns:
+None: The function writes the results to a JSON file and does not return anything.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="similarity.find_most_similar_twitter_users">
+<span class="sig-prename descclassname"><span class="pre">similarity.</span></span><span class="sig-name descname"><span class="pre">find_most_similar_twitter_users</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">numberOfuser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minimumNeighbor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/similarity.html#find_most_similar_twitter_users"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#similarity.find_most_similar_twitter_users" title="Permalink to this definition"></a></dt>
+<dd><p>This function finds the most similar Twitter users based on their followers.</p>
+<p>Parameters:
+numberOfuser (int): The number of users to find.
+minimumNeighbor (int): The minimum number of common followers between two users to consider them similar.</p>
+<p>Returns:
+None: The function writes the results to a JSON file and does not return anything.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="similarity.image_similarity_two_user">
+<span class="sig-prename descclassname"><span class="pre">similarity.</span></span><span class="sig-name descname"><span class="pre">image_similarity_two_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/similarity.html#image_similarity_two_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#similarity.image_similarity_two_user" title="Permalink to this definition"></a></dt>
+<dd><p>This function calculates the average image similarity between two users’ images.</p>
+<p>Parameters:
+u1 (str): The username of the first user.
+u2 (str): The username of the second user.</p>
+<p>Returns:
+float: The average image similarity between the two users’ images.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="similarity.post_similarity">
+<span class="sig-prename descclassname"><span class="pre">similarity.</span></span><span class="sig-name descname"><span class="pre">post_similarity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/similarity.html#post_similarity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#similarity.post_similarity" title="Permalink to this definition"></a></dt>
+<dd><p>This function calculates the average text similarity between the posts of two users.</p>
+<p>Parameters:
+u1 (str): The username of the first user.
+u2 (str): The username of the second user.</p>
+<p>Returns:
+float: The average text similarity between the posts of the two users. If the languages of the posts do not match or are not supported, it ignores those pairs of posts in the calculation.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="similarity.read_comments">
+<span class="sig-prename descclassname"><span class="pre">similarity.</span></span><span class="sig-name descname"><span class="pre">read_comments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/similarity.html#read_comments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#similarity.read_comments" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="similarity.text_similarity">
+<span class="sig-prename descclassname"><span class="pre">similarity.</span></span><span class="sig-name descname"><span class="pre">text_similarity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/similarity.html#text_similarity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#similarity.text_similarity" title="Permalink to this definition"></a></dt>
+<dd><p>This function calculates the text similarity between two texts.
+It supports both English and Farsi texts.</p>
+<p>Parameters:
+text1 (str): The first text.
+text2 (str): The second text.</p>
+<p>Returns:
+float: The text similarity between the two texts. If the languages of the texts do not match or are not supported, it returns -10.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="similarity.tweet_similarity">
+<span class="sig-prename descclassname"><span class="pre">similarity.</span></span><span class="sig-name descname"><span class="pre">tweet_similarity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/similarity.html#tweet_similarity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#similarity.tweet_similarity" title="Permalink to this definition"></a></dt>
+<dd><p>This function calculates the average text similarity between the tweets of two users.</p>
+<p>Parameters:
+u1 (str): The username of the first user.
+u2 (str): The username of the second user.</p>
+<p>Returns:
+float: The average text similarity between the tweets of the two users. If the languages of the tweets do not match or are not supported, it ignores those pairs of tweets in the calculation.</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="relation_to_json.html" class="btn btn-neutral float-left" title="relation_to_json module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tagAnalysis.html" class="btn btn-neutral float-right" title="tagAnalysis module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Ali Adelkhah.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

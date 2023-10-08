@@ -1,0 +1,7 @@
+twitterscrape module
+====================
+
+.. automodule:: twitterscrape
+   :members:
+   :undoc-members:
+   :show-inheritance:

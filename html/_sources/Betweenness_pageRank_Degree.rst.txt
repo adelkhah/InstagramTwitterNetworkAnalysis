@@ -1,0 +1,7 @@
+Betweenness\_pageRank\_Degree module
+====================================
+
+.. automodule:: Betweenness_pageRank_Degree
+   :members:
+   :undoc-members:
+   :show-inheritance:

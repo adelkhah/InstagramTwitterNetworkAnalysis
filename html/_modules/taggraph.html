@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>taggraph &mdash; Social Media Analysis Twitter and Instagram 1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=404a92a0"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Social Media Analysis Twitter and Instagram
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">condainstagramanalys</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Social Media Analysis Twitter and Instagram</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">taggraph</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for taggraph</h1><div class="highlight"><pre>
+<span></span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">twitterscrape</span> <span class="k">as</span> <span class="nn">ts</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">combinations</span>
+<span class="kn">import</span> <span class="nn">relation_to_json</span> <span class="k">as</span> <span class="nn">rel</span>
+<span class="kn">import</span> <span class="nn">community_detection</span>
+<span class="kn">import</span> <span class="nn">instagramscraper</span> <span class="k">as</span> <span class="nn">isp</span>
+
+<div class="viewcode-block" id="read_tags_insta"><a class="viewcode-back" href="../taggraph.html#taggraph.read_tags_insta">[docs]</a><span class="k">def</span> <span class="nf">read_tags_insta</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function reads the tags of a given Instagram user from a file.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    name (str): The username of the Instagram account.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    list: A list of tags from the user&#39;s posts.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># empty list to read list from a file</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># open file and read the content in a list</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;instagramuser/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">/tags.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">fp</span><span class="p">:</span>
+            <span class="c1"># remove linebreak from a current name</span>
+            <span class="c1"># linebreak is the last character of each line</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">line</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="c1"># add current item to the list</span>
+            <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">names</span></div>
+
+<div class="viewcode-block" id="read_json_file"><a class="viewcode-back" href="../taggraph.html#taggraph.read_json_file">[docs]</a><span class="k">def</span> <span class="nf">read_json_file</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="build_tag_graph"><a class="viewcode-back" href="../taggraph.html#taggraph.build_tag_graph">[docs]</a><span class="k">def</span> <span class="nf">build_tag_graph</span><span class="p">(</span><span class="n">file_name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function builds a graph of tags from all users&#39; comments and writes it to a file.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    file_name (str): The name of the file to write the tag graph to.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    None: The function writes the tag graph to a file and does not return anything.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">all</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">read_alluser_fromFile</span><span class="p">()</span>
+    <span class="n">allrel</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">all</span><span class="p">:</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">read_comments</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">for</span> <span class="n">com</span> <span class="ow">in</span> <span class="n">c</span><span class="p">:</span>
+            <span class="n">taga</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">find_hashtags</span><span class="p">(</span><span class="n">com</span><span class="p">)</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">taga</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ts</span><span class="o">.</span><span class="n">remove_hashtag</span><span class="p">(</span><span class="n">taga</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> <span class="n">ts</span><span class="o">.</span><span class="n">remove_hashtag</span><span class="p">(</span><span class="n">taga</span><span class="p">[</span><span class="n">j</span><span class="p">])))</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">allrel</span> <span class="o">+=</span> <span class="n">res</span>
+
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">u1</span><span class="p">,</span> <span class="n">u2</span><span class="p">)</span> <span class="ow">in</span> <span class="n">allrel</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">u1</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">u2</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="count_each_tag"><a class="viewcode-back" href="../taggraph.html#taggraph.count_each_tag">[docs]</a><span class="k">def</span> <span class="nf">count_each_tag</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function counts the occurrence of each tag in all users&#39; comments.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    dict: A dictionary where the keys are tags and the values are their counts.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">commdic</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="nb">all</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">read_alluser_fromFile</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">all</span><span class="p">:</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">read_comments</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="n">commdic</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">find_hashtags_list</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+
+    <span class="n">counttag</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">commdic</span><span class="p">:</span>
+        <span class="n">tags</span> <span class="o">=</span> <span class="n">commdic</span><span class="p">[</span><span class="n">p</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">:</span>
+            <span class="n">counttag</span><span class="p">[</span><span class="n">ts</span><span class="o">.</span><span class="n">remove_hashtag</span><span class="p">(</span><span class="n">t</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">commdic</span><span class="p">:</span>
+        <span class="n">tags</span> <span class="o">=</span> <span class="n">commdic</span><span class="p">[</span><span class="n">p</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">:</span>
+            <span class="n">counttag</span><span class="p">[</span><span class="n">ts</span><span class="o">.</span><span class="n">remove_hashtag</span><span class="p">(</span><span class="n">t</span><span class="p">)]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">counttag</span></div>
+
+
+<div class="viewcode-block" id="tags_relation_tojason"><a class="viewcode-back" href="../taggraph.html#taggraph.tags_relation_tojason">[docs]</a><span class="k">def</span> <span class="nf">tags_relation_tojason</span><span class="p">(</span><span class="n">counttag</span><span class="p">,</span> <span class="n">tag_edges</span><span class="p">,</span> <span class="n">tag_graph_json</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function builds a JSON object representing the relations between tags and writes it to a file.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    counttag (dict): A dictionary where the keys are tags and the values are their counts.</span>
+<span class="sd">    tag_edges (str): The name of the file containing the tag edges.</span>
+<span class="sd">    tag_graph_json (str): The name of the file to write the JSON object to.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    None: The function writes the JSON object to a file and does not return anything.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">nodes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">edges</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">name_to_id</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">tag_edges</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">eachline</span> <span class="o">=</span> <span class="n">line</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">accounts</span> <span class="o">=</span> <span class="n">eachline</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+            <span class="n">account_1</span> <span class="o">=</span> <span class="n">accounts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">account_2</span> <span class="o">=</span> <span class="n">accounts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="n">nodes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">account_1</span><span class="p">)</span>
+            <span class="n">nodes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">account_2</span><span class="p">)</span>
+            <span class="n">edges</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">account_1</span><span class="p">,</span> <span class="n">account_2</span><span class="p">))</span>
+
+    <span class="nb">dict</span><span class="p">[</span><span class="s2">&quot;nodes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">id_n</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">account</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
+        <span class="nb">dict</span><span class="p">[</span><span class="s2">&quot;nodes&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">id_n</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">account</span><span class="p">,</span> <span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                              <span class="s1">&#39;freq&#39;</span><span class="p">:</span> <span class="n">counttag</span><span class="p">[</span><span class="n">account</span><span class="p">]})</span>
+        <span class="n">name_to_id</span><span class="p">[</span><span class="n">account</span><span class="p">]</span> <span class="o">=</span> <span class="n">id_n</span>
+        <span class="n">id_n</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="nb">dict</span><span class="p">[</span><span class="s2">&quot;links&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">bi_links</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">id_l</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">accounts</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span>
+        <span class="n">id_1</span> <span class="o">=</span> <span class="n">name_to_id</span><span class="p">[</span><span class="n">accounts</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="n">id_2</span> <span class="o">=</span> <span class="n">name_to_id</span><span class="p">[</span><span class="n">accounts</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">accounts</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">accounts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span>
+            <span class="n">bi_links</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">id_1</span><span class="p">,</span> <span class="n">id_2</span><span class="p">))</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">id_2</span><span class="p">,</span> <span class="n">id_1</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">bi_links</span><span class="p">:</span>
+                <span class="nb">dict</span><span class="p">[</span><span class="s2">&quot;links&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">id_l</span><span class="p">,</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">id_1</span><span class="p">,</span> <span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="n">id_2</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span> <span class="s2">&quot;bi_directional&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
+                <span class="n">id_l</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">dict</span><span class="p">[</span><span class="s2">&quot;links&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">id_l</span><span class="p">,</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">id_1</span><span class="p">,</span> <span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="n">id_2</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span> <span class="s2">&quot;bi_directional&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
+            <span class="n">id_l</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">tag_graph_json</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="n">outfile</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;json created&quot;</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">tag_edges_file</span> <span class="o">=</span> <span class="s1">&#39;alltagrelationship.txt&#39;</span>
+    <span class="n">tag_graph_json</span> <span class="o">=</span> <span class="s1">&#39;02 visual/tagGraph.json&#39;</span>
+    <span class="n">tag_cluster_json</span> <span class="o">=</span> <span class="s1">&#39;02 visual/tagClusterGraph.json&#39;</span>
+
+    <span class="n">build_tag_graph</span><span class="p">(</span><span class="n">tag_edges_file</span><span class="p">)</span>
+    <span class="n">tag_freq</span> <span class="o">=</span> <span class="n">count_each_tag</span><span class="p">()</span>
+    <span class="n">tags_relation_tojason</span><span class="p">(</span><span class="n">tag_freq</span><span class="p">,</span> <span class="n">tag_edges_file</span><span class="p">,</span> <span class="n">tag_graph_json</span><span class="p">)</span>
+
+    <span class="n">community_detection</span><span class="o">.</span><span class="n">community_detection</span><span class="p">(</span><span class="n">tag_edges_file</span><span class="p">,</span>
+                                            <span class="n">tag_graph_json</span><span class="p">,</span>
+                                            <span class="n">tag_cluster_json</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Ali Adelkhah.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

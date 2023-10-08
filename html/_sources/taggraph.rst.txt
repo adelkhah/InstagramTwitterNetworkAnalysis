@@ -1,0 +1,7 @@
+taggraph module
+===============
+
+.. automodule:: taggraph
+   :members:
+   :undoc-members:
+   :show-inheritance:

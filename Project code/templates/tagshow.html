@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<head>
+      <meta charset="utf-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Admin Dashboard | Korsat X Parmaga</title>
+    <!-- ======= Styles ====== -->
+    <link rel="stylesheet" href="/static/style.css">
+
+
+</head>
+
+
+<body>
+    <!-- =============== Navigation ================ -->
+    <div class="container">
+        <div class="navigation">
+            <ul>
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <ion-icon name="list-outline"></ion-icon>
+                        </span>
+                        <span class="title">Twitter Networks</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/">
+                        <span class="icon">
+                            <ion-icon name="home-outline"></ion-icon>
+                        </span>
+                        <span class="title">Home</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/Communities">
+                        <span class="icon">
+                            <ion-icon name="people-outline"></ion-icon>
+                        </span>
+                        <span class="title">Communities</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/influence">
+                        <span class="icon">
+                            <ion-icon name="trending-up-outline"></ion-icon>
+                        </span>
+                        <span class="title">Maximum Influence</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/tagshow">
+                        <span class="icon">
+                            <ion-icon name="git-compare-outline"></ion-icon>
+                        </span>
+                        <span class="title">Tags Graph</span>
+                    </a>
+                </li>
+                 <li>
+                    <a href="/tagshowcluster">
+                        <span class="icon">
+                            <ion-icon name="grid-outline"></ion-icon>
+                        </span>
+                        <span class="title">Tags Clustering</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/showtagwords">
+                        <span class="icon">
+                            <ion-icon name="chatbubbles-outline"></ion-icon>
+                        </span>
+                        <span class="title">Trend Tags and Words</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/showtagsentiment">
+                        <span class="icon">
+                            <ion-icon name="happy-outline"></ion-icon>
+                        </span>
+                        <span class="title">Tweet Sentiment</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/linkpredict">
+                        <span class="icon">
+                            <ion-icon name="git-commit-outline"></ion-icon>
+                        </span>
+                        <span class="title">Link Prediction</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- =========== Scripts =========  -->
+    <script src="assets/js/main.js"></script>
+
+    <!-- ====== ionicons ======= -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+</body>
+
+
+<div align='center' id="d3_selectable_force_directed_graph">
+<svg />
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://d3js.org/d3.v4.js"></script>
+<script src="/statichtml/d3v4-brush-lite.js"></script>
+<script src="/statichtml/d3v4-selectable-force-directed-graph_tag.js"></script>
+
+<script>
+$(document).ready(function(){
+  var x=$(window).width();
+  var y=$(window).height();
+
+  $("#d3_selectable_force_directed_graph").css('width', x);
+  $("#d3_selectable_force_directed_graph").css('height', y);
+
+  var svg = d3.select('#d3_selectable_force_directed_graph');
+
+  d3.json('/statichtml/{{ filename['name'] }}', function(error, graph) {
+      if (!error) {
+          //console.log('graph', graph);
+          createV4SelectableForceDirectedGraph(svg, graph);
+      } else {
+          console.error(error);
+      }
+  });
+});
+
+</script>
+<style type="text/css">
+  div.tooltip {
+    position: absolute;
+    text-align: center;
+    padding: 4px;
+    font: 12px sans-serif;
+    background: white;
+    border: 0px;
+    border-radius: 3px;
+    pointer-events: none;
+  }
+
+  .hidden {
+    opacity: 0.2;
+  }
+
+  /*.edge {
+    opacity: 0.2;
+  }*/
+
+  #d3_selectable_force_directed_graph svg {
+    font: 13px sans-serif;
+    text-anchor: end;
+  }
+
+  #d3_selectable_force_directed_graph .node {
+    stroke: #fff;
+    stroke-width: 1px;
+  }
+
+  .node .selected {
+    stroke: black;
+  }
+
+  .link-bi {
+    stroke: #999 !important;
+  }
+</style>

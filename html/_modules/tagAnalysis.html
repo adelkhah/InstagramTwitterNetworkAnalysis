@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tagAnalysis &mdash; Social Media Analysis Twitter and Instagram 1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=404a92a0"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Social Media Analysis Twitter and Instagram
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">condainstagramanalys</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Social Media Analysis Twitter and Instagram</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">tagAnalysis</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for tagAnalysis</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">twitterscrape</span> <span class="k">as</span> <span class="nn">ts</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span><span class="p">,</span> <span class="n">Counter</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">sent2vec.vectorizer</span> <span class="kn">import</span> <span class="n">Vectorizer</span>
+<span class="kn">import</span> <span class="nn">operator</span>
+<span class="kn">from</span> <span class="nn">hazm</span> <span class="kn">import</span> <span class="n">SentEmbedding</span>
+<span class="kn">from</span> <span class="nn">langdetect</span> <span class="kn">import</span> <span class="n">detect</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="c1"># sentEmbedding = SentEmbedding()</span>
+<span class="c1"># sentEmbedding.load_model(&#39;sent2vec\sent2vec-naab.model&#39;)</span>
+<span class="c1"># vectorizer = Vectorizer()</span>
+
+<div class="viewcode-block" id="read_tags_insta"><a class="viewcode-back" href="../tagAnalysis.html#tagAnalysis.read_tags_insta">[docs]</a><span class="k">def</span> <span class="nf">read_tags_insta</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="c1"># empty list to read list from a file</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># open file and read the content in a list</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;instagramuser/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">/tags.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">fp</span><span class="p">:</span>
+            <span class="c1"># remove linebreak from a current name</span>
+            <span class="c1"># linebreak is the last character of each line</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">line</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="c1"># add current item to the list</span>
+            <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">names</span></div>
+
+<div class="viewcode-block" id="sentiment_analys"><a class="viewcode-back" href="../tagAnalysis.html#tagAnalysis.sentiment_analys">[docs]</a><span class="k">def</span> <span class="nf">sentiment_analys</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function performs sentiment analysis on a given text. It detects the language of the text and calls the appropriate sentiment analysis function based on the language.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    text (str): The text to perform sentiment analysis on.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    str: The sentiment of the text. It can be &#39;joy&#39;, &#39;sad&#39;, &#39;hate&#39;, &#39;love&#39;, &#39;angry&#39;, &#39;fear&#39;, or &#39;none&#39; if the language is not supported.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">det</span> <span class="o">=</span> <span class="n">detect</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">det</span> <span class="o">==</span> <span class="s1">&#39;en&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">sentiment_analys_english</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">det</span> <span class="o">==</span> <span class="s1">&#39;fa&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">sentiment_analys_farsi</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;none&#39;</span></div>
+
+<div class="viewcode-block" id="sentiment_analys_farsi"><a class="viewcode-back" href="../tagAnalysis.html#tagAnalysis.sentiment_analys_farsi">[docs]</a><span class="k">def</span> <span class="nf">sentiment_analys_farsi</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function performs sentiment analysis on a given Farsi text.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    text (str): The Farsi text to perform sentiment analysis on.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    str: The sentiment of the text. It can be &#39;joy&#39;, &#39;sad&#39;, &#39;hate&#39;, &#39;love&#39;, &#39;angry&#39;, or &#39;fear&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># joy</span>
+    <span class="c1"># sad</span>
+    <span class="c1"># hate</span>
+    <span class="c1"># love</span>
+    <span class="c1"># angry</span>
+    <span class="c1"># fear</span>
+    <span class="n">result1</span> <span class="o">=</span> <span class="n">sentEmbedding</span><span class="o">.</span><span class="n">similarity</span><span class="p">(</span><span class="s1">&#39;شاد و خوشحال و سرزنده و شاداب و با طروات&#39;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="n">result2</span> <span class="o">=</span> <span class="n">sentEmbedding</span><span class="o">.</span><span class="n">similarity</span><span class="p">(</span><span class="s1">&#39;افسوس و ناراحتی&#39;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="n">result3</span> <span class="o">=</span> <span class="n">sentEmbedding</span><span class="o">.</span><span class="n">similarity</span><span class="p">(</span><span class="s1">&#39; بدم میاد و دوست ندارم و خوشم نمیاد&#39;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="n">result4</span> <span class="o">=</span> <span class="n">sentEmbedding</span><span class="o">.</span><span class="n">similarity</span><span class="p">(</span><span class="s1">&#39; دوست دارم و عشق&#39;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="n">result5</span> <span class="o">=</span> <span class="n">sentEmbedding</span><span class="o">.</span><span class="n">similarity</span><span class="p">(</span><span class="s1">&#39; عصبانی و خشمگین و خشم&#39;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="n">result6</span> <span class="o">=</span> <span class="n">sentEmbedding</span><span class="o">.</span><span class="n">similarity</span><span class="p">(</span><span class="s1">&#39; میترسم و ترس و وحشت&#39;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="n">simi</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">simi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result1</span><span class="p">)</span>
+    <span class="n">simi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result2</span><span class="p">)</span>
+    <span class="n">simi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result3</span><span class="p">)</span>
+    <span class="n">simi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result4</span><span class="p">)</span>
+    <span class="n">simi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result5</span><span class="p">)</span>
+    <span class="n">simi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result6</span><span class="p">)</span>
+    <span class="n">max_index</span><span class="p">,</span> <span class="n">max_value</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">enumerate</span><span class="p">(</span><span class="n">simi</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="n">operator</span><span class="o">.</span><span class="n">itemgetter</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">max_index</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;joy&#39;</span>
+    <span class="k">if</span> <span class="n">max_index</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;sad&#39;</span>
+    <span class="k">if</span> <span class="n">max_index</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;hate&#39;</span>
+    <span class="k">if</span> <span class="n">max_index</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;love&#39;</span>
+    <span class="k">if</span> <span class="n">max_index</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;angry&#39;</span>
+    <span class="k">if</span> <span class="n">max_index</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;fear&#39;</span></div>
+
+
+
+<div class="viewcode-block" id="sentiment_analys_english"><a class="viewcode-back" href="../tagAnalysis.html#tagAnalysis.sentiment_analys_english">[docs]</a><span class="k">def</span> <span class="nf">sentiment_analys_english</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function performs sentiment analysis on a given English text.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    text (str): The English text to perform sentiment analysis on.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    str: The sentiment of the text. It can be &#39;joy&#39;, &#39;sad&#39;, &#39;hate&#39;, &#39;love&#39;, &#39;angry&#39;, or &#39;fear&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># joy</span>
+    <span class="c1"># sad</span>
+    <span class="c1"># hate</span>
+    <span class="c1"># love</span>
+    <span class="c1"># angry</span>
+    <span class="c1"># fear</span>
+
+    <span class="n">sentences</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;happy grateful enjoy&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sad upset bad&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;hate resent&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;love lover&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;angry fury rage&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;fear afraid dangerous&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">sentences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="n">vectorizer</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">sentences</span><span class="p">)</span>
+    <span class="n">vectors</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">vectors</span>
+
+    <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">spatial</span>
+    <span class="n">distan</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">):</span>
+        <span class="n">distan</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">spatial</span><span class="o">.</span><span class="n">distance</span><span class="o">.</span><span class="n">cosine</span><span class="p">(</span><span class="n">vectors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">vectors</span><span class="p">[</span><span class="mi">6</span><span class="p">]))</span>
+
+    <span class="n">min_index</span><span class="p">,</span> <span class="n">min_value</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">enumerate</span><span class="p">(</span><span class="n">distan</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="n">operator</span><span class="o">.</span><span class="n">itemgetter</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">min_index</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;joy&#39;</span>
+    <span class="k">if</span> <span class="n">min_index</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;sad&#39;</span>
+    <span class="k">if</span> <span class="n">min_index</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;hate&#39;</span>
+    <span class="k">if</span> <span class="n">min_index</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;love&#39;</span>
+    <span class="k">if</span> <span class="n">min_index</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;angry&#39;</span>
+    <span class="k">if</span> <span class="n">min_index</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;fear&#39;</span></div>
+
+
+<div class="viewcode-block" id="remove_short_words"><a class="viewcode-back" href="../tagAnalysis.html#tagAnalysis.remove_short_words">[docs]</a><span class="k">def</span> <span class="nf">remove_short_words</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">min_length</span> <span class="o">=</span> <span class="mi">4</span><span class="p">)</span> <span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function removes words from a string that are shorter than a specified length.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    s (str): The string from which to remove short words.</span>
+<span class="sd">    min_length (int): The minimum length of words to keep. Default is 4.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    str: The string with short words removed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">words</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="n">long_words</span> <span class="o">=</span> <span class="p">[</span><span class="n">word</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">min_length</span><span class="p">]</span>
+    <span class="k">return</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">long_words</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="most_frequent_two_word_phrases"><a class="viewcode-back" href="../tagAnalysis.html#tagAnalysis.most_frequent_two_word_phrases">[docs]</a><span class="k">def</span> <span class="nf">most_frequent_two_word_phrases</span><span class="p">(</span><span class="n">texts</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function finds the most frequent two-word phrases in a list of texts.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    texts (list): A list of text strings to analyze.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    dict: A dictionary where the keys are hashtags and the values are lists of tuples. Each tuple contains a two-word phrase and its frequency.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">hashtags</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">texts</span><span class="p">:</span>
+        <span class="n">words</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="n">two_word_phrases</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">words</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">words</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">word</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">):</span>
+                <span class="n">hashtags</span><span class="p">[</span><span class="n">ts</span><span class="o">.</span><span class="n">remove_hashtag</span><span class="p">(</span><span class="n">word</span><span class="p">)]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">two_word_phrases</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">hashtag</span><span class="p">,</span> <span class="n">phrases</span> <span class="ow">in</span> <span class="n">hashtags</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">phrase_counts</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">phrases</span><span class="p">)</span>
+        <span class="k">del</span> <span class="n">phrase_counts</span><span class="p">[</span><span class="n">hashtag</span><span class="p">]</span>
+        <span class="n">result</span><span class="p">[</span><span class="n">hashtag</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">phrase_counts</span><span class="o">.</span><span class="n">most_common</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+<div class="viewcode-block" id="most_frequent_words"><a class="viewcode-back" href="../tagAnalysis.html#tagAnalysis.most_frequent_words">[docs]</a><span class="k">def</span> <span class="nf">most_frequent_words</span><span class="p">(</span><span class="n">texts</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function finds the most frequent words in a list of texts.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    texts (list): A list of text strings to analyze.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    dict: A dictionary where the keys are hashtags and the values are lists of tuples. Each tuple contains a word and its frequency.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">hashtags</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">texts</span><span class="p">:</span>
+        <span class="n">words</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">word</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">):</span>
+                <span class="n">hashtags</span><span class="p">[</span><span class="n">ts</span><span class="o">.</span><span class="n">remove_hashtag</span><span class="p">(</span><span class="n">word</span><span class="p">)]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">words</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">hashtag</span><span class="p">,</span> <span class="n">words</span> <span class="ow">in</span> <span class="n">hashtags</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">word_counts</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">words</span><span class="p">)</span>
+        <span class="k">del</span> <span class="n">word_counts</span><span class="p">[</span><span class="n">hashtag</span><span class="p">]</span>
+        <span class="n">result</span><span class="p">[</span><span class="n">hashtag</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">word_counts</span><span class="o">.</span><span class="n">most_common</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+<div class="viewcode-block" id="top_n_keys"><a class="viewcode-back" href="../tagAnalysis.html#tagAnalysis.top_n_keys">[docs]</a><span class="k">def</span> <span class="nf">top_n_keys</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function finds the top N keys in a dictionary based on their values.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    d (dict): The dictionary to analyze.</span>
+<span class="sd">    n (int): The number of keys to return.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    list: A list of the top N keys in the dictionary.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">sorted_items</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">top_n</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">sorted_items</span><span class="p">[:</span><span class="n">n</span><span class="p">]]</span>
+    <span class="k">return</span> <span class="n">top_n</span></div>
+
+
+
+
+<div class="viewcode-block" id="find_trend"><a class="viewcode-back" href="../tagAnalysis.html#tagAnalysis.find_trend">[docs]</a><span class="k">def</span> <span class="nf">find_trend</span><span class="p">(</span><span class="n">tagnumber</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">wordnumber</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function finds the trending hashtags and their associated words and phrases.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    tagnumber (int): The number of top trending hashtags to find. Default is 10.</span>
+<span class="sd">    wordnumber (int): The number of top words and phrases to find for each hashtag. Default is 5.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    tuple: A tuple containing three dictionaries -</span>
+<span class="sd">        1. A dictionary where the keys are hashtags and the values are their counts.</span>
+<span class="sd">        2. A dictionary where the keys are hashtags and the values are lists of top words associated with each hashtag.</span>
+<span class="sd">        3. A dictionary where the keys are hashtags and the values are lists of top two-word phrases associated with each hashtag.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">commdic</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="nb">all</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">read_alluser_fromFile</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">all</span><span class="p">:</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">read_comments</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="n">commdic</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">find_hashtags_list</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+
+    <span class="n">counttag</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">commdic</span><span class="p">:</span>
+        <span class="n">tags</span> <span class="o">=</span> <span class="n">commdic</span><span class="p">[</span><span class="n">p</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">:</span>
+            <span class="n">counttag</span><span class="p">[</span><span class="n">ts</span><span class="o">.</span><span class="n">remove_hashtag</span><span class="p">(</span><span class="n">t</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">commdic</span><span class="p">:</span>
+        <span class="n">tags</span> <span class="o">=</span> <span class="n">commdic</span><span class="p">[</span><span class="n">p</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">:</span>
+            <span class="n">counttag</span><span class="p">[</span><span class="n">ts</span><span class="o">.</span><span class="n">remove_hashtag</span><span class="p">(</span><span class="n">t</span><span class="p">)]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">textswith</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">textswithout</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="nb">all</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">read_alluser_fromFile</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="nb">all</span><span class="p">:</span>
+        <span class="n">comment</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">comment</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">read_comments</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">comment</span><span class="p">:</span>
+            <span class="n">pp</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\u200c</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+            <span class="n">ppp</span> <span class="o">=</span> <span class="n">remove_short_words</span><span class="p">(</span><span class="n">pp</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+            <span class="n">textswith</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pp</span><span class="p">)</span>
+            <span class="n">textswithout</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ppp</span><span class="p">)</span>
+
+    <span class="n">trends</span> <span class="o">=</span> <span class="n">most_frequent_words</span><span class="p">(</span><span class="n">textswithout</span><span class="p">)</span>
+    <span class="n">trends2</span> <span class="o">=</span> <span class="n">most_frequent_two_word_phrases</span><span class="p">(</span><span class="n">textswith</span><span class="p">)</span>
+    <span class="n">trend</span> <span class="o">=</span> <span class="n">top_n_keys</span><span class="p">(</span><span class="n">counttag</span><span class="p">,</span> <span class="n">tagnumber</span><span class="p">)</span>
+    <span class="n">newt2</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">newt</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">tagtrend</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">trend</span><span class="p">:</span>
+        <span class="n">tagtrend</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="n">counttag</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
+        <span class="n">newt</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="n">trends</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="p">[])[:</span><span class="n">wordnumber</span><span class="p">]</span>
+        <span class="n">newt2</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="n">trends2</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="p">[])[:</span><span class="n">wordnumber</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">tagtrend</span> <span class="p">,</span><span class="n">newt</span><span class="p">,</span> <span class="n">newt2</span><span class="p">)</span></div>
+
+
+
+
+<div class="viewcode-block" id="trend_tag_sentiment"><a class="viewcode-back" href="../tagAnalysis.html#tagAnalysis.trend_tag_sentiment">[docs]</a><span class="k">def</span> <span class="nf">trend_tag_sentiment</span><span class="p">(</span><span class="n">tagnumber</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function finds the sentiment of the tweets associated with the trending hashtags.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    tagnumber (int): The number of top trending hashtags to analyze. Default is 10.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    dict: A dictionary where the keys are hashtags and the values are dictionaries. Each inner dictionary contains the sentiment counts for the associated hashtag.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">commdic</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">alltweetfortag</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="nb">all</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">read_alluser_fromFile</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">all</span><span class="p">:</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">read_comments</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="n">commdic</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">find_hashtags_list</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+
+    <span class="n">counttag</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">commdic</span><span class="p">:</span>
+        <span class="n">tags</span> <span class="o">=</span> <span class="n">commdic</span><span class="p">[</span><span class="n">p</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">:</span>
+            <span class="n">counttag</span><span class="p">[</span><span class="n">ts</span><span class="o">.</span><span class="n">remove_hashtag</span><span class="p">(</span><span class="n">t</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">alltweetfortag</span><span class="p">[</span><span class="n">ts</span><span class="o">.</span><span class="n">remove_hashtag</span><span class="p">(</span><span class="n">t</span><span class="p">)]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">commdic</span><span class="p">:</span>
+        <span class="n">tags</span> <span class="o">=</span> <span class="n">commdic</span><span class="p">[</span><span class="n">p</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">:</span>
+            <span class="n">counttag</span><span class="p">[</span><span class="n">ts</span><span class="o">.</span><span class="n">remove_hashtag</span><span class="p">(</span><span class="n">t</span><span class="p">)]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">textswith</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">textswithout</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="nb">all</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">read_alluser_fromFile</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="nb">all</span><span class="p">:</span>
+        <span class="n">comment</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">comment</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">read_comments</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">comment</span><span class="p">:</span>
+            <span class="n">pc</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\u200c</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+            <span class="n">pp</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\u2069</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">pc</span><span class="p">)</span>
+            <span class="n">ppp</span> <span class="o">=</span> <span class="n">remove_short_words</span><span class="p">(</span><span class="n">pp</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+            <span class="n">textswith</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pp</span><span class="p">)</span>
+            <span class="n">textswithout</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ppp</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">tex</span> <span class="ow">in</span> <span class="n">textswith</span><span class="p">:</span>
+        <span class="n">taa</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">find_hashtags</span><span class="p">(</span><span class="n">tex</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">tata</span> <span class="ow">in</span> <span class="n">taa</span><span class="p">:</span>
+            <span class="n">alltweetfortag</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ts</span><span class="o">.</span><span class="n">remove_hashtag</span><span class="p">(</span><span class="n">tata</span><span class="p">),</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tex</span><span class="p">)</span>
+
+    <span class="n">tagsent</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">alltweetfortag</span><span class="p">:</span>
+        <span class="n">tagsent</span><span class="p">[</span><span class="n">tag</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;joy&#39;</span><span class="p">:</span> <span class="mi">0</span> <span class="p">,</span><span class="s1">&#39;sad&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span><span class="s1">&#39;hate&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                        <span class="s1">&#39;love&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span><span class="s1">&#39;angry&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span><span class="s1">&#39;fear&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+
+    <span class="n">trend</span> <span class="o">=</span> <span class="n">top_n_keys</span><span class="p">(</span><span class="n">counttag</span><span class="p">,</span> <span class="n">tagnumber</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">trend</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">alltweetfortag</span><span class="p">[</span><span class="n">tag</span><span class="p">]):</span>
+            <span class="n">ans</span> <span class="o">=</span> <span class="n">sentiment_analys</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span>
+            <span class="n">tagsent</span><span class="p">[</span><span class="n">tag</span><span class="p">][</span><span class="n">ans</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">trendtagsent</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">trend</span><span class="p">:</span>
+        <span class="n">trendtagsent</span><span class="p">[</span><span class="n">tag</span><span class="p">]</span> <span class="o">=</span> <span class="n">tagsent</span><span class="p">[</span><span class="n">tag</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">trendtagsent</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+
+    <span class="n">wordn</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">tagn</span> <span class="o">=</span> <span class="mi">15</span>
+    <span class="n">trends</span> <span class="o">=</span> <span class="n">find_trend</span><span class="p">(</span><span class="n">tagn</span><span class="p">,</span> <span class="n">wordn</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">trend_tag_sentiment</span><span class="p">(</span><span class="n">tagn</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;trendtags/trendtags_</span><span class="si">{</span><span class="n">tagn</span><span class="si">}</span><span class="s1">.json&#39;</span><span class="p">,</span> <span class="s1">&#39;w+&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">trends</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">outfile</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;trendtags/trendtagword</span><span class="si">{</span><span class="n">tagn</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">wordn</span><span class="si">}</span><span class="s1">.json&#39;</span><span class="p">,</span> <span class="s1">&#39;w+&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">trends</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">outfile</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;trendtags/trendtag2word</span><span class="si">{</span><span class="n">tagn</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">wordn</span><span class="si">}</span><span class="s1">.json&#39;</span><span class="p">,</span> <span class="s1">&#39;w+&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">trends</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">outfile</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;trendtags/trendtagsentiment_</span><span class="si">{</span><span class="n">tagn</span><span class="si">}</span><span class="s1">.json&#39;</span><span class="p">,</span> <span class="s1">&#39;w+&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">outfile</span><span class="p">)</span>
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Ali Adelkhah.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,7 @@
+mainInstagram module
+====================
+
+.. automodule:: mainInstagram
+   :members:
+   :undoc-members:
+   :show-inheritance:

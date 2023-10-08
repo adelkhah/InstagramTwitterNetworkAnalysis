@@ -1,0 +1,7 @@
+instagramscraper module
+=======================
+
+.. automodule:: instagramscraper
+   :members:
+   :undoc-members:
+   :show-inheritance:
